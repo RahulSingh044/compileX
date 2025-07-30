@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+/* Compiler loading animation */
+.compiler-loader {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #38bdf8;
+  animation: bounce 1s infinite alternate;
+}
+
+.dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(0);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-20px);
+    opacity: 1;
+  }
+}
+
+/* Split gutter styles for react-split */
+.gutter {
+  background-color: #222;
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+.gutter.gutter-horizontal {
+  cursor: col-resize;
+  width: 10px;
+}
+.gutter.gutter-vertical {
+  cursor: row-resize;
+  height: 20px;
+}
