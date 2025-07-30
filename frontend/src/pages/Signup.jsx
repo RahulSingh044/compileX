@@ -65,7 +65,7 @@ function Signup() {
         const { firstName, lastName, email, password } = formData;
         const name = `${firstName} ${lastName}`;
         const payload = { name, email, password };
-        const res = await axios.post('http://localhost:3000/signup', payload);
+        const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/signup`, payload);
         console.log(res.data);
         // toast.success('Account created successfully!');
         setFormData({
