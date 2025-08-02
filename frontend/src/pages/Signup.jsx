@@ -101,6 +101,15 @@ function Signup() {
             Join us today and start your journey
           </p>
         </div>
+        {/* 
+          If your signup form is not working, check the following:
+          1. Are all fields in formData initialized? (firstName, lastName, email, password, confirmPassword)
+          2. Is handleChange updating formData correctly?
+          3. Are you validating all required fields in validateForm?
+          4. Are you handling errors from the backend properly?
+          5. Is the backend endpoint correct and reachable?
+          6. Are you importing all required icons/components (FaEye, FaEyeSlash)?
+        */}
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -111,10 +120,11 @@ function Signup() {
                 type="text"
                 id="firstName"
                 name="firstName"
-                value={formData.firstName}
+                value={formData.firstName || ''}
                 onChange={handleChange}
                 className={`w-full px-4 py-3 rounded-lg border bg-gray-800/50 border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${errors.firstName ? 'border-red-500 focus:ring-red-500' : ''}`}
                 placeholder="Enter your first name"
+                autoComplete="given-name"
               />
               {errors.firstName && <p className="mt-1 text-sm text-red-400 animate-pulse">{errors.firstName}</p>}
             </div>
@@ -126,10 +136,11 @@ function Signup() {
                 type="text"
                 id="lastName"
                 name="lastName"
-                value={formData.lastName}
+                value={formData.lastName || ''}
                 onChange={handleChange}
                 className={`w-full px-4 py-3 rounded-lg border bg-gray-800/50 border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${errors.lastName ? 'border-red-500 focus:ring-red-500' : ''}`}
                 placeholder="Enter your last name"
+                autoComplete="family-name"
               />
               {errors.lastName && <p className="mt-1 text-sm text-red-400 animate-pulse">{errors.lastName}</p>}
             </div>
@@ -142,40 +153,60 @@ function Signup() {
               type="email"
               id="email"
               name="email"
-              value={formData.email}
+              value={formData.email || ''}
               onChange={handleChange}
               className={`w-full px-4 py-3 rounded-lg border bg-gray-800/50 border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${errors.email ? 'border-red-500 focus:ring-red-500' : ''}`}
               placeholder="Enter your email"
+              autoComplete="email"
             />
             {errors.email && <p className="mt-1 text-sm text-red-400 animate-pulse">{errors.email}</p>}
           </div>
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  id="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-3 pr-12 rounded-lg border bg-gray-800/50 border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${errors.password ? 'border-red-500 focus:ring-red-500' : ''}`}
-                  placeholder="Enter your password"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-300 transition-colors duration-200"
-                >
-                  {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
-                </button>
-              </div>
-              {errors.password && <p className="mt-1 text-sm text-red-400 animate-pulse">{errors.password}</p>}
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
+              Password
+            </label>
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                name="password"
+                value={formData.password || ''}
+                onChange={handleChange}
+                className={`w-full px-4 py-3 pr-12 rounded-lg border bg-gray-800/50 border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${errors.password ? 'border-red-500 focus:ring-red-500' : ''}`}
+                placeholder="Enter your password"
+                autoComplete="new-password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-300 transition-colors duration-200"
+                tabIndex={-1}
+              >
+                {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+              </button>
             </div>
+            {errors.password && <p className="mt-1 text-sm text-red-400 animate-pulse">{errors.password}</p>}
+          </div>
+          {/* If you want to add confirm password, add here */}
+          {/* <div>
+            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-300 mb-2">
+              Confirm Password
+            </label>
+            <input
+              type={showPassword ? 'text' : 'password'}
+              id="confirmPassword"
+              name="confirmPassword"
+              value={formData.confirmPassword || ''}
+              onChange={handleChange}
+              className={`w-full px-4 py-3 pr-12 rounded-lg border bg-gray-800/50 border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${errors.confirmPassword ? 'border-red-500 focus:ring-red-500' : ''}`}
+              placeholder="Confirm your password"
+              autoComplete="new-password"
+            />
+            {errors.confirmPassword && <p className="mt-1 text-sm text-red-400 animate-pulse">{errors.confirmPassword}</p>}
+          </div> */}
           <button
             type="submit"
-            disabled={isSubmitting}
+            // disabled={isSubmitting}
             className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02]"
           >
             {isSubmitting ? (
