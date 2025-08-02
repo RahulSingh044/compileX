@@ -18,6 +18,7 @@ function Signup() {
 
   const handleChange = (e) => {
     const { name, value } = e.target
+    console.log(name, value);
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -48,9 +49,6 @@ function Signup() {
     } else if (formData.password.length < 6) {
       newErrors.password = 'Password must be at least 6 characters'
     }
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password'
-    }
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -58,32 +56,32 @@ function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!validateForm()) {
+      toast.error(errors.firstName || errors.lastName || errors.email || errors.password);
       return
     }
     setIsSubmitting(true)
     try {
-        const { firstName, lastName, email, password } = formData;
-        const name = `${firstName} ${lastName}`;
-        const payload = { name, email, password };
-        const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/signup`, payload);
-        console.log(res.data);
-        // toast.success('Account created successfully!');
-        setFormData({
-            firstName: '',
-            lastName: '',
-            email: '',
-            password: '',
-            confirmPassword: ''
-        })
-        if(res.data.success === true) {
-            toast.success('Account created successfully!');
-            setTimeout(() => {
-                window.location.href = '/login';
-            }, 1500);
-        }
+      const { firstName, lastName, email, password } = formData;
+      const name = `${firstName} ${lastName}`;
+      const payload = { name, email, password };
+      console.log(payload);
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/signup`, payload);
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: ''
+      })
+      if (res.data.success === true) {
+        toast.success('Account created successfully!');
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 1500);
+      }
     } catch (error) {
-      console.error('Signup error:', error.res.data.message)
-      alert('Failed to create account. Please try again.')
+      const errorMessage = error.response?.data?.msg || "Failed to create account.";
+      console.error('Signup error:', errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsSubmitting(false)
     }
@@ -93,7 +91,7 @@ function Signup() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-4">
       <div className="max-w-lg w-full bg-white/5 border border-white/30 rounded-2xl shadow-lg p-8 backdrop-blur-md space-y-8">
         <div className="text-center">
-        <img className='w-52 h-14 inline-block mr-2' src={Logo} alt="" />
+          <img className='w-52 h-14 inline-block mr-2' src={Logo} alt="" />
           <h2 className="mt-2 text-3xl font-bold text-gray-900">
             Create Account
           </h2>
@@ -101,15 +99,6 @@ function Signup() {
             Join us today and start your journey
           </p>
         </div>
-        {/* 
-          If your signup form is not working, check the following:
-          1. Are all fields in formData initialized? (firstName, lastName, email, password, confirmPassword)
-          2. Is handleChange updating formData correctly?
-          3. Are you validating all required fields in validateForm?
-          4. Are you handling errors from the backend properly?
-          5. Is the backend endpoint correct and reachable?
-          6. Are you importing all required icons/components (FaEye, FaEyeSlash)?
-        */}
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -187,23 +176,6 @@ function Signup() {
             </div>
             {errors.password && <p className="mt-1 text-sm text-red-400 animate-pulse">{errors.password}</p>}
           </div>
-          {/* If you want to add confirm password, add here */}
-          {/* <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-300 mb-2">
-              Confirm Password
-            </label>
-            <input
-              type={showPassword ? 'text' : 'password'}
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword || ''}
-              onChange={handleChange}
-              className={`w-full px-4 py-3 pr-12 rounded-lg border bg-gray-800/50 border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${errors.confirmPassword ? 'border-red-500 focus:ring-red-500' : ''}`}
-              placeholder="Confirm your password"
-              autoComplete="new-password"
-            />
-            {errors.confirmPassword && <p className="mt-1 text-sm text-red-400 animate-pulse">{errors.confirmPassword}</p>}
-          </div> */}
           <button
             type="submit"
             // disabled={isSubmitting}

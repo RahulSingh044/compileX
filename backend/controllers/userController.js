@@ -1,5 +1,6 @@
 const axios = require("axios");
 const User = require("../models/userModel");
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 var { getHelloWorldCode } = require('../utils/CodeSnippets');
 const Project = require('../models/projectModel');
@@ -17,19 +18,14 @@ exports.signup = async (req, res) => {
             });
         }
 
-        bcrypt.genSalt(10, (err, salt) => {
-            bcrypt.hash(password, salt, async function (err, hash) {
-              // Store hash in your password DB
-              const user = await User.create({ name, email, password: hash });
-              return res.status(201).json({
-                success: true,
-                msg: "User created successfully",
-                user
-            });
-            });
-          });
-
-
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        const user = await User.create({ name, email, password: hashedPassword });
+        return res.status(201).json({
+            success: true,
+            msg: "User created successfully",
+            user
+        });
     } catch (error) {
         res.status(500).json({
             success: false,
